@@ -1,0 +1,4 @@
+<!--index.wxml-->
+<view class="container">
+  <gauge aaa="aaa" gaugeid="g1" config="{{config}}" />
+</view>
