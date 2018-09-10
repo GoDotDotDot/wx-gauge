@@ -1,5 +1,5 @@
-const PI3_2 = Math.PI * 1.5;
-const PI1_2 = Math.PI * 0.5;
+const PI_3_2 = Math.PI * 1.5;
+const PI_1_2 = Math.PI * 0.5;
 
 const mergeProps = function(newVal, oldVal) {
   return { ...oldVal,
@@ -355,7 +355,7 @@ Component({
 
         ctx.save()
         ctx.translate(point.x, point.y)
-        const rotateDegrees = angle >= PI3_2 ? (angle - PI3_2) : (angle + PI1_2);
+        const rotateDegrees = angle >= PI_3_2 ? (angle - PI_3_2) : (angle + PI_1_2);
         // console.log(rotateDegrees)
         ctx.rotate(rotateDegrees)
         ctx.fillText(value, 0, 0)
