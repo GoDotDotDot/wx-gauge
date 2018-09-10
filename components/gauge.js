@@ -1,6 +1,50 @@
 const PI3_2 = Math.PI * 1.5;
 const PI1_2 = Math.PI * 0.5;
 
+const mergeProps = function(newVal, oldVal) {
+  return { ...oldVal,
+    ...newVal
+  }
+}
+
+const defaultObjectProps = {
+  indicatorTextStyle: {
+    type: Object,
+    value: {
+      show: false,
+      size: 12,
+      color: '#666',
+      text: ''
+    }
+  },
+  indicatorValueStyle: {
+    type: Object,
+    value: {
+      show: false,
+      size: 18,
+      color: '#4575e8'
+    }
+  },
+  indicatorCircleStyle: {
+    type: Object,
+    value: {
+      show: false,
+      bgColor: '#00b800',
+      r: 9,
+      borderRadius: 3,
+      borderColor: '#fff'
+    }
+  },
+  scaleTextStyle: {
+    type: Object,
+    value: {
+      show: false,
+      size: 16,
+      color: '#f0f0f0'
+    }
+  }
+}
+
 // components/gauge.js
 Component({
   /**
@@ -34,23 +78,19 @@ Component({
       // value: 180 / 90 * Math.PI,
       value: 10 / 90 * Math.PI,
     },
-    bgColor: {
-      type: String,
-      value: '#f0f0f0',
-    },
-    indicatorBgColr: {
-      type: Array,
+    indicatorBgColor: {
+      type: [Array,String],
       value: [{
           progress: 0,
-          value: '#32d900'
+          value: '#ff0000'
         },
         {
-          progress: 0.5,
-          value: '#00d9bb'
+          progress: 0.6,
+          value: '#ffeb11'
         },
         {
           progress: 1,
-          value: '#3b8bc5'
+          value: '#00b800'
         }
       ],
     },
@@ -79,22 +119,6 @@ Component({
       type: Number,
       value: 0,
     },
-    indicatorTextStyle: {
-      type: Object,
-      value: {
-        show: false,
-        size: 12,
-        color: '#666',
-        text: ''
-      }
-    },
-    indicatorValueStyle: {
-      type: Object,
-      value: {
-        size: 18,
-        color: '#4575e8'
-      }
-    },
     indicatorText: {
       type: String,
       value: ''
@@ -105,13 +129,7 @@ Component({
         0, 200, 400, 600, 800, 1000
       ]
     },
-    scaleTextStyle: {
-      type: Object,
-      value: {
-        size: 16,
-        color: 'red'
-      }
-    }
+    ...defaultObjectProps
   },
 
   /**
@@ -198,17 +216,13 @@ Component({
         for (let i = 0; i < length; i++) {
           const bg = backgroundColor[i]
           fillGrd.addColorStop(bg.progress, bg.value || '#32d900')
-          // fillGrd.addColorStop(1, '#2c94e0')
         }
-        // fillGrd.addColorStop(0.25, '#00d9bb')
-        // fillGrd.addColorStop(0.75, '#3b8bc5')
         ctx.setFillStyle(fillGrd)
       } else {
         ctx.setFillStyle(config.backgroundColor)
       }
       ctx.closePath()
       ctx.fill()
-
     },
     _animate: function(func) {
       const {
@@ -244,6 +258,9 @@ Component({
       delete newCfg.bgColor
       this._drawCircle(ctx, newCfg)
     },
+    /**
+     * 绘制指示器圆圈
+     */
     _drawIndicator: function(ctx, value = 0, config) {
       let {
         startAngle,
@@ -257,10 +274,10 @@ Component({
       const currentAngle = (value / (max - min)) * (endAngle - startAngle) + startAngle
       const newCfg = {
         ...config,
-        backgroundColor: config.indicatorBgColr,
+        backgroundColor: config.indicatorBgColor,
         endAngle: currentAngle,
       }
-
+      // debugger
       this._drawCircle(ctx, newCfg)
     },
     _drawIndicatorValue: function(ctx, text, config) {
@@ -271,8 +288,9 @@ Component({
       } = config
       const {
         size = 25,
-        color = '#1AAD16'
+          color = '#1AAD16'
       } = indicatorValueStyle
+      // debugger
       ctx.save()
       ctx.setFillStyle(color)
       // 以下精度可以加接口控制
@@ -287,16 +305,17 @@ Component({
         indicatorTextStyle
       } = config
       const {
-        size = 25,
-          color = '#1AAD16',
-          text = ""
-      } = indicatorTextStyle
+        size,
+        color,
+        text
+      } = mergeProps(indicatorTextStyle,defaultObjectProps.indicatorTextStyle.value) 
       ctx.save()
       ctx.setFillStyle(color)
       // 以下精度可以加接口控制
       ctx.setFontSize(size)
       ctx.setTextAlign('center')
-      ctx.fillText(text, x, y - 5 - config.indicatorValueStyle.size)
+      const mergedIndicatorValueStyle = mergeProps(config.indicatorValueStyle, defaultObjectProps.indicatorValueStyle.value) 
+      ctx.fillText(text, x, y - 5 - mergedIndicatorValueStyle.size)
     },
     _drawIndicatorScale: function(ctx, config) {
       const {
@@ -318,8 +337,9 @@ Component({
       }
       const len = scale.length;
       const {
-        size = 16, color = "red"
-      } = scaleTextStyle;
+        size,
+        color
+      } = mergeProps(scaleTextStyle, defaultObjectProps.scaleTextStyle.value);
       ctx.setFillStyle(color)
       // 以下精度可以加接口控制
       ctx.setFontSize(size)
@@ -332,11 +352,11 @@ Component({
           angle = angle - Math.PI * 2
         }
         const point = this.getPoint(x, y, r - bgWidth - size - 5, angle);
-        console.log(point)
+
         ctx.save()
         ctx.translate(point.x, point.y)
         const rotateDegrees = angle >= PI3_2 ? (angle - PI3_2) : (angle + PI1_2);
-        console.log(rotateDegrees)
+        // console.log(rotateDegrees)
         ctx.rotate(rotateDegrees)
         ctx.fillText(value, 0, 0)
         ctx.restore()
@@ -345,42 +365,66 @@ Component({
     /**
      * 绘制终点圆圈指示器
      */
-    _drawIndicatorCircle:function(ctx,value=0,config){
-      const { indicatorCircleStyle, x,y,r, max, min, startAngle, endAngle} = config;
+    _drawIndicatorCircle: function(ctx, value = 0, config) {
+      ctx.beginPath()
+      const {
+        indicatorCircleStyle,
+        x,
+        y,
+        r,
+        max,
+        min,
+        bgWidth
+      } = config;
+      let {
+        startAngle,
+        endAngle,
+      } = config
+      if (endAngle <= startAngle) {
+        endAngle += 2 * Math.PI
+      }
       const currentAngle = (value / (max - min)) * (endAngle - startAngle) + startAngle
       const outPoint = this.getPoint(x, y, r, currentAngle);
-      const innerPoint = this.getPoint(x, y, r - bgWidth / 2, currentAngle);
+      const innerPoint = this.getPoint(x, y, r - bgWidth, currentAngle);
       const point = {
         x: (outPoint.x + innerPoint.x) / 2,
         y: (outPoint.y + innerPoint.y) / 2,
       }
-      const { bgColor, boderRadius, boderColor } = indicatorCircleStyle
-      // if (boderRadius!==0){
-      //   ctx.arc(point.x, point.y, indicatorCircleStyle.r + boderRadius, 0, 2 * Math.PI);
-      //   if (Array.isArray(boderColor)) {
-      //     const fillGrd = ctx.createLinearGradient(point.x-boderRadius, point.y-boderRadius, point.x+boderRadius, point.y+boderRadius);
-      //     const {
-      //       length
-      //     } = boderColor
-      //     for (let i = 0; i < length; i++) {
-      //       const bg = boderColor[i]
-      //       fillGrd.addColorStop(bg.progress, bg.value || '#32d900')
-      //       // fillGrd.addColorStop(1, '#2c94e0')
-      //     }
-      //     // fillGrd.addColorStop(0.25, '#00d9bb')
-      //     // fillGrd.addColorStop(0.75, '#3b8bc5')
-      //     ctx.setFillStyle(fillGrd)
-      //   } else {
-      //     ctx.setFillStyle(config.backgroundColor)
-      //   }
-      //   ctx.setFillStyle(fillGrd)        
-      //   ctx.fill()
-      // }
-      ctx.arc(point.x, point.y, indicatorCircleStyle.r,0,2*Math.PI);
-      ctx.setFillStyle(fillGrd)
+      ctx.moveTo(point.x, point.y)
+      let mergedIndicatorCircleStyle
+      const {
+        bgColor,
+        borderRadius,
+        borderColor
+      } = mergedIndicatorCircleStyle = mergeProps(indicatorCircleStyle, defaultObjectProps.indicatorCircleStyle.value)
+      // 边框
+      if (!isNaN(borderRadius) && borderRadius !== 0) {
+        const outR = mergedIndicatorCircleStyle.r + borderRadius
+        ctx.arc(point.x, point.y, outR, 0, 2 * Math.PI);
+        if (Array.isArray(borderColor)) {
+          const fillGrd = ctx.createCircularGradient(point.x, point.y, outR);
+          const {
+            length
+          } = borderColor
+          for (let i = 0; i < length; i++) {
+            const bg = borderColor[i]
+            fillGrd.addColorStop(bg.progress, bg.value || '#32d900')
+          }
+          ctx.setFillStyle(fillGrd)
+        } else {
+          ctx.setFillStyle(borderColor)
+        }
+        ctx.closePath()
+        ctx.fill()
+      }
+      // 内圈指示器
+      ctx.beginPath()
+      ctx.arc(point.x, point.y, mergedIndicatorCircleStyle.r, 0, 2 * Math.PI);
+      ctx.setFillStyle(bgColor)
+      ctx.closePath()
       ctx.fill()
-    }
-    ,
+
+    },
     drawGauge: function(canvasId, x, y) {
       const ctx = wx.createCanvasContext(canvasId, this);
       this.ctx = ctx;
@@ -399,13 +443,20 @@ Component({
         value,
         min
       } = this.data;
-      const { indicatorTextStyle, indicatorValueStyle} = this.properties
+      const {
+        indicatorTextStyle,
+        indicatorValueStyle,
+        indicatorCircleStyle
+      } = this.properties
       const animateValue = min + (value - min) * percent;
       this._drawBackground(ctx, config)
-      this._drawIndicatorScale(ctx, config)
       this._drawIndicator(ctx, animateValue, config)
+      this._drawIndicatorScale(ctx, config)
       if (indicatorTextStyle.show) {
         this._drawIndicatorText(ctx, config)
+      }
+      if (indicatorCircleStyle.show) {
+        this._drawIndicatorCircle(ctx, animateValue, config)
       }
       if (indicatorValueStyle.show) {
         this._drawIndicatorValue(ctx, animateValue, config)
@@ -417,6 +468,7 @@ Component({
   ready: function(opt) {
     const canvasId = 'gauge_' + this.data.gaugeid;
     const that = this;
+    
     let x = 187;
     let y = 187;
     wx.getSystemInfo({

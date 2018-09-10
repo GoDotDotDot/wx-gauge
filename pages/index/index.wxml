@@ -2,12 +2,15 @@
 <view id="a1" class="container">
   <gauge 
   height="750" 
-  r="150" 
+  r="135" 
+  bgWidth="13"
   gaugeid="g1"
   animateMsec="700" 
   scaleTextStyle="{{scaleTextStyle}}" 
   indicatorTextStyle='{{indicatorTextStyle}}'
   indicatorValueStyle='{{indicatorValueStyle}}'
+  indicatorCircleStyle='{{indicatorCircleStyle}}'
+
   min="0"
   max="1000"
   value="900"
