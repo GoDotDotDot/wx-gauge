@@ -146,7 +146,6 @@ Component({
     getPoint: function(x, y, r, angle) {
       const x1 = x + r * Math.cos(angle);
       const y1 = y + r * Math.sin(angle);
-      // debugger
       return {
         x: x1,
         y: y1
@@ -277,7 +276,6 @@ Component({
         backgroundColor: config.indicatorBgColor,
         endAngle: currentAngle,
       }
-      // debugger
       this._drawCircle(ctx, newCfg)
     },
     _drawIndicatorValue: function(ctx, text, config) {
@@ -290,8 +288,6 @@ Component({
         size = 25,
           color = '#1AAD16'
       } = indicatorValueStyle
-      // debugger
-      ctx.save()
       ctx.setFillStyle(color)
       // 以下精度可以加接口控制
       ctx.setFontSize(size)
@@ -347,7 +343,6 @@ Component({
       for (let i = 0; i < len; i++) {
         const value = scale[i]
         let angle = (value / (max - min)) * (endAngle - startAngle) + startAngle
-        // debugger
         if (angle >= Math.PI * 2) {
           angle = angle - Math.PI * 2
         }
