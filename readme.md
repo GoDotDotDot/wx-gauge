@@ -4,6 +4,39 @@
 
 基于canvas开发，功能不断叠加
 
+## 如何使用
+
+第一步：在需要使用该组件地方的配置文件中加入
+
+```json
+{
+  "usingComponents":{
+    "gauge":"../../components/gauge" // 组件地址
+  }
+}
+```
+
+第二步：在需要引用该组件的地方引入如下所示代码
+
+``` react
+  <gauge 
+      height="750" 
+      r="135" 
+      bgWidth="13"
+      gaugeid="g1"
+      animateMsec="700" 
+      scaleTextStyle="{{scaleTextStyle}}" 
+      indicatorTextStyle='{{indicatorTextStyle}}'
+      indicatorValueStyle='{{indicatorValueStyle}}'
+      indicatorCircleStyle='{{indicatorCircleStyle}}'
+      min="0"
+      max="1000"
+      value="900"
+  />
+```
+
+
+
 **备注：数据刻度暂时定位人工分段，后期采用自动分割尺度**
 
 ## API
