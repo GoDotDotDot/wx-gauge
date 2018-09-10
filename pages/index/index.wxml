@@ -1,4 +1,15 @@
 <!--index.wxml-->
-<view class="container">
-  <gauge aaa="aaa" gaugeid="g1" config="{{config}}" />
+<view id="a1" class="container">
+  <gauge 
+  height="750" 
+  r="150" 
+  gaugeid="g1"
+  animateMsec="700" 
+  scaleTextStyle="{{scaleTextStyle}}" 
+  indicatorTextStyle='{{indicatorTextStyle}}'
+  indicatorValueStyle='{{indicatorValueStyle}}'
+  min="0"
+  max="1000"
+  value="900"
+  />
 </view>

@@ -13,7 +13,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "2.2.0",
 	"appid": "wx9e5ac993c27bb2aa",
-	"projectname": "wechat",
+	"projectname": "wx-gauge",
 	"isGameTourist": false,
 	"condition": {
 		"search": {
