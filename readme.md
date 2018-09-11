@@ -1,10 +1,10 @@
 # 微信小程序仪表盘组件
 
 <div style="text-align:center">	
-![](./wx-gauge.png)
+  <img src="./wx-gauge.png" />
 </div>
 <div  style="text-align:center">
-![](https://img.shields.io/npm/v/wx-gauge.svg) ![](https://img.shields.io/npm/dt/wx-gauge.svg)
+  <img src="https://img.shields.io/npm/v/wx-gauge.svg" /><img src="https://img.shields.io/npm/dt/wx-gauge.svg" />
 </div>
 
 
