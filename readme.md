@@ -1,6 +1,14 @@
 # 微信小程序仪表盘组件
 
+<div style="text-align:center">	
 ![](./wx-gauge.png)
+</div>
+<div  style="text-align:center">
+![](https://img.shields.io/npm/v/wx-gauge.svg) ![](https://img.shields.io/npm/dt/wx-gauge.svg)
+</div>
+
+
+
 
 基于canvas开发，功能不断叠加
 
@@ -15,6 +23,8 @@
   }
 }
 ```
+
+或者使用官方的npm支持文档中方案 https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html
 
 第二步：在需要引用该组件的地方引入如下所示代码
 

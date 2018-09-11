@@ -5,6 +5,7 @@ const app = getApp()
 Page({
   data: {
     scaleTextStyle:{
+      show:true,
       size:12,
       color:'#666'
     },

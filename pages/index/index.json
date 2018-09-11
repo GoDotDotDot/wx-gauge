@@ -1,5 +1,5 @@
 {
   "usingComponents":{
-    "gauge":"../../components/gauge"
+    "gauge":"../../dist/index"
   }
 }

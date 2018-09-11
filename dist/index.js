@@ -166,17 +166,14 @@ Component({
       ctx.arc(config.x, config.y, config.r, config.startAngle, config.endAngle)
       // 外圈结束坐标
       const outEndPoint = this.getPoint(config.x, config.y, config.r, config.endAngle)
-      console.log('外圈结束坐标：', outEndPoint)
 
       // 内圈结束坐标
       const innerEndPoint = this.getPoint(config.x, config.y, innerCircleRadius, config.endAngle)
-      console.log('内圈结束坐标：', innerEndPoint)
       // 结束位置小圆圈坐标
       const endCirclePoint = {
         x: (outEndPoint.x + innerEndPoint.x) / 2,
         y: (outEndPoint.y + innerEndPoint.y) / 2,
       }
-      console.log('结束位置小圆圈坐标：', endCirclePoint)
 
       // 结束位置圆弧
       ctx.arc(endCirclePoint.x, endCirclePoint.y, config.bgWidth / 2, config.endAngle, config.endAngle + Math.PI)
@@ -185,18 +182,15 @@ Component({
 
       // 外圈开始位置坐标
       const outStartPoint = this.getPoint(config.x, config.y, config.r, config.startAngle)
-      console.log('外圈开始位置坐标', outStartPoint)
 
       // 内圈开始位置坐标
       const innerStartPoint = this.getPoint(config.x, config.y, innerCircleRadius, config.startAngle)
-      console.log('内圈开始位置坐标', innerStartPoint)
 
       // 开始位置小圆圈坐标
       const startCirclePoint = {
         x: (outStartPoint.x + innerStartPoint.x) / 2,
         y: (outStartPoint.y + innerStartPoint.y) / 2,
       }
-      console.log('开始位置小圆圈坐标：', startCirclePoint)
       // 开始位置小圆圈坐标
       // 开始位置圆弧
       ctx.moveTo(outStartPoint.x, outStartPoint.y)
@@ -351,7 +345,6 @@ Component({
         ctx.save()
         ctx.translate(point.x, point.y)
         const rotateDegrees = angle >= PI_3_2 ? (angle - PI_3_2) : (angle + PI_1_2);
-        // console.log(rotateDegrees)
         ctx.rotate(rotateDegrees)
         ctx.fillText(value, 0, 0)
         ctx.restore()
@@ -441,12 +434,15 @@ Component({
       const {
         indicatorTextStyle,
         indicatorValueStyle,
-        indicatorCircleStyle
+        indicatorCircleStyle,
+        scaleTextStyle
       } = this.properties
       const animateValue = min + (value - min) * percent;
       this._drawBackground(ctx, config)
       this._drawIndicator(ctx, animateValue, config)
-      this._drawIndicatorScale(ctx, config)
+      if (scaleTextStyle.show) {
+        this._drawIndicatorScale(ctx, config)
+      }
       if (indicatorTextStyle.show) {
         this._drawIndicatorText(ctx, config)
       }
