@@ -79,7 +79,7 @@ Component({
       value: 10 / 90 * Math.PI,
     },
     indicatorBgColor: {
-      type: [Array,String],
+      type: [Array, String],
       value: [{
           progress: 0,
           value: '#ff0000'
@@ -114,6 +114,15 @@ Component({
     value: {
       type: Number,
       value: 700,
+      observer: function(newVal, oldVal, changedPath) {
+        this.setData({
+            value: newVal
+          },
+          function() {
+            this.drawGauge(this.canvasId, this.x, this.y)
+          }
+        )
+      }
     },
     animateMsec: {
       type: Number,
@@ -298,13 +307,13 @@ Component({
         size,
         color,
         text
-      } = mergeProps(indicatorTextStyle,defaultObjectProps.indicatorTextStyle.value) 
+      } = mergeProps(indicatorTextStyle, defaultObjectProps.indicatorTextStyle.value)
       ctx.save()
       ctx.setFillStyle(color)
       // 以下精度可以加接口控制
       ctx.setFontSize(size)
       ctx.setTextAlign('center')
-      const mergedIndicatorValueStyle = mergeProps(config.indicatorValueStyle, defaultObjectProps.indicatorValueStyle.value) 
+      const mergedIndicatorValueStyle = mergeProps(config.indicatorValueStyle, defaultObjectProps.indicatorValueStyle.value)
       ctx.fillText(text, x, y - 5 - mergedIndicatorValueStyle.size)
     },
     _drawIndicatorScale: function(ctx, config) {
@@ -459,7 +468,7 @@ Component({
   ready: function(opt) {
     const canvasId = 'gauge_' + this.data.gaugeid;
     const that = this;
-    
+
     let x = 187;
     let y = 187;
     wx.getSystemInfo({
@@ -473,8 +482,9 @@ Component({
           width,
           height
         } = that.data
-        x = width * rpxTopx / 2;
-        y = height * rpxTopx / 2;
+        that.x = x = width * rpxTopx / 2;
+        that.y = y = height * rpxTopx / 2;
+        that.canvasId = canvasId
         that.drawGauge(canvasId, x, y)
       },
     })
